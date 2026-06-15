@@ -1,7 +1,7 @@
 # Ciudades conectadas, peso de cada conexion, fuente de la informacion
 
-grafooo_ciudadesss = {    #se ingresan toooodas las ciudades y su peso con el resto de ciudades
-                    #solo hay de españa y pportugal
+grafo_ciudades = {    #se ingresan todas las ciudades y su peso con el resto de ciudades
+                    #solo hay de españa y portugal (diccionario con listas de tuplas como valores)
     
     "madrid": [
         (620, "barcelona"), (350, "valencia"), (530, "sevilla"), (320, "zaragoza"), (540, "malaga"), (400, "murcia"), (400, "bilbao"),
