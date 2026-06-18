@@ -1,1 +1,15 @@
+Requerimientos necesarios para el Proyecto Algoritmo_dijkstra.py
+1.- Requerimientos Técnicos.
+Para el correcto funcionamiento del sistema, se requiere de Python versión 3.6 o superior.
+Se necesitan instalar las siguientes librerías:
+- customtkinter versión: 5.0 o superior.
+- matplotlib versión: 3.5 o superior.
+- networkx versión: 3.0 o superior.
+Todas las librerías usadas pueden instalarse en la terminal de comandos del entorno de desarrollo.
 
+2.- Estructura
+El sistema está compuesto por tres módulos interdependientes que deben coexistir en el mismo directorio.
+
+* Info_Grafos.py: Dicho módulo contiene la estructura de datos, un diccionario de listas de tuplas, que define la estructura del algoritmo, modelando 15 ciudades (vértices) y sus 21 interconexiones (aristas).
+* Algoritmo_dijkstra.py: Núcleo lógico del proyecto. Contiene la función matemática que calcula automáticamente el camino óptimo entre nodos, sumando los kilómetros de las interconexiones.
+* interfaz.py: Ejecuta la aplicación, capturando los datos del usuario y renderizando de forma interactiva el grafo con las rutas óptimas con base en el módulo anterior.
