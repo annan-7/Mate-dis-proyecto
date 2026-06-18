@@ -35,13 +35,3 @@ def dijkstra(grafo, inicio, destino):
                 heapq.heappush(cola_prioridad, (distancia_nueva, vecino))
 
     return None, float('inf')  # Si no hay camino entre inicio y destino
-
-# Ejemplo de uso
-
-inicio = input("Ingrese la ciudad de origen: ").lower()
-destino = input("Ingrese la ciudad de destino: ").lower()
-camino, distancia = dijkstra(grafo_ciudades, inicio, destino)
-if camino:
-    print(f"Camino más corto de {inicio} a {destino}: {' -> '.join(camino)} con distancia {distancia}")
-else:
-    print(f"No hay camino entre {inicio} y {destino}.")
