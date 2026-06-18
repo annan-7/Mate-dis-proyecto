@@ -5,6 +5,8 @@ import customtkinter as ctk
 import matplotlib.pyplot as plt
 import networkx as nx
 
+
+
 # configuración de la apariencia de la interfaz
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -17,7 +19,7 @@ ventana.geometry("720x480")
 # ejecuta el algoritmo de dijkstra al hacer click en el botón
 def ejecutar_dijkstra():
     inicio = entry_inicio.get().lower().strip()
-    destino = entry_destino.get().lower().strip()
+    destino = entry_destino.get().lower().strip() # strip() es para eliminar espacios de un texto
     
     if inicio not in Info_Grafos.grafo_ciudades or destino not in Info_Grafos.grafo_ciudades:
         resultado_label.configure(
@@ -29,7 +31,7 @@ def ejecutar_dijkstra():
 
     if camino:
         resultado_label.configure(
-            text=f"Camino más corto de {inicio} a {destino}:\n{' -> '.join(camino)}\nDistancia: {distancia}",
+            text=f"Camino más corto de {inicio} a {destino}:\n{' -> '.join(camino)}\nDistancia: {distancia} KM",
             text_color="green")
         mostrar_grafo(camino) # muestra el grafo con el camino resaltado en rojo
     else:
@@ -49,10 +51,10 @@ def mostrar_grafo(camino):
     plt.close("all")  # cierra cualquier pestaña de grafo abierta si es q se ejecuta varias veces
     G = construir_grafo()
 
-    pos = nx.spring_layout(G, seed=42)  # spring_layout es para mantener la posicion de los nodos consistente entre grafo completo y grafo con camino resaltado
-    plt.figure(figsize=(8, 6))
+    pos = nx.spring_layout(G, seed=42, k=0.5)  # spring_layout es para mantener la posicion de los nodos consistente entre grafo completo y grafo con camino resaltado
+    plt.figure(figsize=(10, 8))
 
-    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=500, font_size=10)
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=1000, font_size=8) # dibuja el grafo con los nodos y las etiquetas
 
     labels = nx.get_edge_attributes(G, 'weight') # obtiene los pesos de las aristas
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels) # dibuja los pesos en las aristas
@@ -67,10 +69,10 @@ def mostrar_grafo(camino):
 def mostrar_grafo_completo():
     plt.close("all")  # cierra cualquier pestaña de grafo abierta si es q se ejecuta
     G = construir_grafo()
-    pos = nx.spring_layout(G, seed=42) # spring_layout es para mantener la posicion de los nodos
-    plt.figure(figsize=(8, 6))
+    pos = nx.spring_layout(G, seed=42, k=0.5) # spring_layout es para mantener la posicion de los nodos
+    plt.figure(figsize=(10, 8))
     
-    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=500, font_size=10) # dibuja el grafo con los nodos y las etiquetas
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=1000, font_size=8) # dibuja el grafo con los nodos y las etiquetas
     
     labels = nx.get_edge_attributes(G, 'weight') # obtiene los pesos de las aristas
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels) # dibuja los pesos en las aristas
@@ -80,9 +82,9 @@ def mostrar_grafo_completo():
 
 # usamos el menu libreria tkinter para las opciones :V
 menu_bar = tk.Menu(ventana)
-menu_opciones = tk.Menu(menu_bar, tearoff=0)
+menu_opciones = tk.Menu(menu_bar, tearoff=0) # tearoff=0 es para que no se pueda separar el submenu del menu principal
 menu_opciones.add_command(label="Mostrar Grafo Completo", command=mostrar_grafo_completo)
-menu_bar.add_cascade(label="Opciones", menu=menu_opciones)
+menu_bar.add_cascade(label="Opciones", menu=menu_opciones) # add_cascade es para agregar un submenu al menu principal
 ventana.configure(menu=menu_bar)
 
 # elementos de la interfaz para ingresar las ciudades de origen y destino
