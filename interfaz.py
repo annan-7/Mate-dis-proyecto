@@ -66,7 +66,7 @@ def mostrar_grafo(camino):
     nx.draw_networkx_nodes(G, pos, nodelist=[camino[-1]], node_color='purple', node_size=1000) # nodo de destino en morado
     
     # agrega una leyenda para el origen en verde, rutas, rutas tomadas en rojo y destino en morado
-    plt.legend(["Rutas", "Ruta Tomada", "Ciudad de Origen", "Ciudad de Destino"], loc="upper left", fontsize=12)
+    plt.legend(["Ciudad", "Rutas", "Ruta Optima", "Ciudad de Origen", "Ciudad de Destino"], loc="upper left", fontsize=12, markerscale=0.5) # markerscale es para reducir el tamaño de los marcadores en la leyenda
     plt.axis('off') # oculta los ejes
     plt.title("Grafo de Ciudades con Camino Resaltado")
     plt.show()
@@ -82,7 +82,6 @@ def mostrar_grafo_completo():
     
     labels = nx.get_edge_attributes(G, 'weight') # obtiene los pesos de las aristas
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels) # dibuja los pesos en las aristas, "label" es para mostrar el peso de cada arista en el grafo
-    
     plt.title("Grafo Completo de Ciudades")
     plt.show()
 
