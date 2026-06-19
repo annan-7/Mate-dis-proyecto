@@ -9,17 +9,17 @@ grafo_ciudades = {    #se ingresan todas las ciudades y su peso con el resto de 
 
     "valladolid": [
         (210, "madrid"), (240, "vitoria"), (250, "santander"), 
-        (250, "oviedo"), (450, "la_coruna"), (440, "vigo")
+        (250, "oviedo"), (450, "la_coruña"), (440, "vigo")
     ],
 
     "vigo": [
-        (150, "porto"), (160, "la_coruna"), (440, "valladolid")
+        (150, "porto"), (160, "la_coruña"), (440, "valladolid")
     ],
     "la_coruna": [
         (160, "vigo"), (450, "valladolid"), (280, "oviedo")
     ],
     "oviedo": [
-        (250, "valladolid"), (280, "la_coruna"), (30, "gijon"), (190, "santander")
+        (250, "valladolid"), (280, "la_coruña"), (30, "gijon"), (190, "santander")
     ],
     "gijon": [
         (30, "oviedo"), (180, "santander")
@@ -51,7 +51,6 @@ grafo_ciudades = {    #se ingresan todas las ciudades y su peso con el resto de 
         (350, "madrid"), (170, "valencia"), (80, "murcia")
     ],
     
-    # SUR / SUDESTE
     "murcia": [
         (400, "madrid"), (80, "alicante"), (280, "granada")
     ],
