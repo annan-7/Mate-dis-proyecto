@@ -1,36 +1,37 @@
 # Estuctura de codigo con algoritmo de dickstra
-import heapq
-
-
-def dijkstra(grafo, inicio, destino):
-    # Inicializar la cola de prioridad y las distancias
-    cola_prioridad = [(0, inicio)]  # (distancia, nodo)
-    distancias = {nodo: float('inf') for nodo in grafo}
+def dijkstra(graph, inicio, destino):
+    # incializa las distancias y predecesores
+    distancias = {nodo: float('inf') for nodo in graph}
+    predecesores = {nodo: None for nodo in graph}
     distancias[inicio] = 0
-    predecesores = {nodo: None for nodo in grafo}
 
-    while cola_prioridad:
-        distancia_actual, nodo_actual = heapq.heappop(cola_prioridad) # heappop lo que hace es q siempre devuelve el nodo con la menor distancia
+    # Conjunto de nodos no visitados
+    no_visitados = set(graph.keys())
 
-        # Si hemos llegado al destino, reconstruimos el camino
+    while no_visitados:
+        # Selecciona el nodo con la distancia mínima
+        nodo_actual = min(no_visitados, key=lambda nodo: distancias[nodo])
+
+        # Si el nodo actual es el destino ya se encontro el camino mas corto
         if nodo_actual == destino:
-            camino = []
-            while nodo_actual is not None:
-                camino.append(nodo_actual)
-                nodo_actual = predecesores[nodo_actual]
-            return camino[::-1], distancias[destino]
+            break
 
-        # Si la distancia actual es mayor que la registrada, ignoramos este nodo
-        if distancia_actual > distancias[nodo_actual]:
-            continue
+        no_visitados.remove(nodo_actual)
 
-        # Explorar los vecinos del nodo actual
-        for peso, vecino in grafo[nodo_actual]:
-            distancia_nueva = distancia_actual + peso
+        # Actualiza las distancias
+        for peso, vecino in graph[nodo_actual]:
+            if vecino in no_visitados:
+                nueva_distancia = distancias[nodo_actual] + peso
+                if nueva_distancia < distancias[vecino]:
+                    distancias[vecino] = nueva_distancia
+                    predecesores[vecino] = nodo_actual
 
-            if distancia_nueva < distancias[vecino]:
-                distancias[vecino] = distancia_nueva
-                predecesores[vecino] = nodo_actual
-                heapq.heappush(cola_prioridad, (distancia_nueva, vecino)) # heappush agrega un nuevo nodo a la cola de prioridad con su distancia actualizada
+    # reconstruye el camino desde el destino hasta el inicio
+    camino = []
+    nodo = destino
+    while nodo is not None:
+        camino.append(nodo)
+        nodo = predecesores[nodo]
+    camino.reverse()
 
-    return None, float('inf')  # Si no hay camino entre inicio y destino
+    return camino, distancias[destino] if distancias[destino] != float('inf') else None
