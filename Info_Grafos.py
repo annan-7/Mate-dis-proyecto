@@ -15,7 +15,7 @@ grafo_ciudades = {    #se ingresan todas las ciudades y su peso con el resto de 
     "vigo": [
         (150, "porto"), (160, "la_coruña"), (440, "valladolid")
     ],
-    "la_coruna": [
+    "la_coruña": [
         (160, "vigo"), (450, "valladolid"), (280, "oviedo")
     ],
     "oviedo": [
