@@ -1,122 +1,20 @@
+import Algoritmo_dijkstra
+import Info_Grafos
 import tkinter as tk
 import customtkinter as ctk
-import networkx as nx
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import Info_Grafos 
-import Algoritmo_dijkstra 
+import networkx as nx
 
+
+
+# configuración de la apariencia de la interfaz
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
+# creación de la ventana principal
 ventana = ctk.CTk()
-ventana.title("Interfaz con Grafo Delimitado")
-ventana.geometry("1080x720")
-
-parte_grafo = ctk.CTkFrame(ventana, width=700, height=600, corner_radius=10)
-parte_grafo.pack(side="right", padx=20, pady=20, fill="both", expand=True)
-
-parte_grafo.pack_propagate(False) #no cambia de tamaño
-
-
-contador_clicks = 0 # para clickear los nodos y ver si es 1er o 2do click
-
-def dibujar_grafo_en_interfaz(camino_resaltado=None):
-    for elemento in parte_grafo.winfo_children():
-        elemento.destroy()
-    G = nx.Graph()
-    for nodo, vecinos in Info_Grafos.grafo_ciudades.items():
-        for peso, vecino in vecinos:
-            G.add_edge(nodo, vecino, weight=peso) #se grafica el grafo creado
-
-    pos = nx.spring_layout(G, seed=42, k=0.6, scale=2) #la K separa los nodos y para que no se aprieten tant
-    
-    # crea la figura ajustada
-    fig, ax = plt.subplots(figsize=(7, 6), dpi=100)
-    
-    colores_nodos = []
-    for nodo in G.nodes():
-        if camino_resaltado and nodo in camino_resaltado:
-            if nodo == camino_resaltado[0]:       
-                colores_nodos.append('green')
-            elif nodo == camino_resaltado[-1]:    
-                colores_nodos.append('purple')
-            else:                                  
-                colores_nodos.append('red')
-        else:
-            colores_nodos.append('lightblue')
-
-    aristas_camino = []
-    if camino_resaltado:
-        aristas_camino = list(zip(camino_resaltado[:-1], camino_resaltado[1:]))
-
-    colores_aristas = []
-    anchos_aristas = []
-    for u, v in G.edges():
-        if (u, v) in aristas_camino or (v, u) in aristas_camino: 
-            colores_aristas.append('red')
-            anchos_aristas.append(3)
-        else:
-            colores_aristas.append('gray')
-            anchos_aristas.append(1)
-    
-    # se hace el margen para que se vea bien el grafo
-    fig.subplots_adjust(left=0.02, right=0.98, top=0.98, bottom=0.02)
-
-    # se grafican los nodos (ahora dinámico)
-    nx.draw_networkx_nodes(G, pos, node_color=colores_nodos, node_size=700, ax=ax)
-    
-    # se grafican las aristas (ahora dinámico)
-    nx.draw_networkx_edges(G, pos, edge_color=colores_aristas, width=anchos_aristas, ax=ax)
-    
-    # se ponen los nombres de las ciudades
-    nx.draw_networkx_labels(G, pos, font_size=7, font_weight="bold", ax=ax)
-
-    # se el peso de cada nodo
-    labels = nx.get_edge_attributes(G, 'weight')
-    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=6, ax=ax)
-
-    # se ocultan los numeritos de matplotlib
-    ax.axis('off') 
-
-    # se convierte el frame de matplotlib a tkinter
-    canvas = FigureCanvasTkAgg(fig, master=parte_grafo)  
-    canvas.draw()
-    canvas.get_tk_widget().pack(fill="both", expand=True)
-
-   
-    #busca el nodo cercano al click y ponerlo en los entry box
-    def obtener_nodo_mas_cercano(click_x, click_y, posiciones):
-        mejor_nodo = None #esta vacio por el momento nomas
-        mejor_distancia = float('inf')
-        
-        for nombre, (px, py) in posiciones.items(): #recorre los nodos y guarda sus coords
-            distanciaa = ((click_x - px)**2 + (click_y - py)**2)**0.5 #con pitagoras calcula la distancia de click al noodo
-            if distanciaa < mejor_distancia:
-                mejor_distancia = distanciaa
-                mejor_nodo = nombre
-        return mejor_nodo if mejor_distancia < 0.2 else None
-
-    def clickear_en_grafo(click):
-        global contador_clicks
-        if click.inaxes is None: return
-        
-        x, y = click.xdata, click.ydata
-        if x is None or y is None: return
-
-        nodo = obtener_nodo_mas_cercano(x, y, pos)
-        
-        if nodo:
-            if contador_clicks== 0: # si es el primer click
-                entry_inicio.delete(0, "end")
-                entry_inicio.insert(0, nodo)
-                contador_clicks = 1
-            elif contador_clicks == 1: # si es el segundo click
-                entry_destino.delete(0, "end")
-                entry_destino.insert(0, nodo)
-
-    canvas.mpl_connect('button_press_event', clickear_en_grafo)
-
+ventana.title("Algoritmo de Dijkstra - Ciudades")
+ventana.geometry("720x480")
 
 # ejecuta el algoritmo de dijkstra al hacer click en el botón
 def ejecutar_dijkstra():
@@ -135,24 +33,64 @@ def ejecutar_dijkstra():
         resultado_label.configure(
             text=f"Camino más corto de {inicio} a {destino}:\n{' -> '.join(camino)}\nDistancia: {distancia} KM",
             text_color="green")
-        dibujar_grafo_en_interfaz(camino_resaltado=camino)
+        mostrar_grafo(camino) # muestra el grafo con el camino resaltado en rojo
     else:
         resultado_label.configure(
             text=f"No hay camino entre {inicio} y {destino}.",
-            text_color="red")       
+            text_color="red")
+        
+def construir_grafo():
+    G = nx.Graph()
+    for nodo, vecinos in Info_Grafos.grafo_ciudades.items():
+        for peso, vecino in vecinos:
+            G.add_edge(nodo, vecino, weight=peso) # agrega las aristas al grafo con el peso como atributo
+    return G
 
-def limpiar_campos():
-    entry_inicio.delete(0, "end")
-    entry_destino.delete(0, "end")
-    resultado_label.configure(text="")
-    global contador_clicks
-    contador_clicks = 0
-    dibujar_grafo_en_interfaz()  
+# muestra el grafo con el mejor camino al destino en rojo
+def mostrar_grafo(camino):
+    plt.close("all")  # cierra cualquier pestaña de grafo abierta si es q se ejecuta varias veces
+    G = construir_grafo()
 
-# se cita a la funico de graficarr
-dibujar_grafo_en_interfaz()
+    pos = nx.spring_layout(G, seed=42, k=0.5)  # spring_layout es para mantener la posicion de los nodos consistente entre grafo completo y grafo con camino resaltado
+    plt.figure(figsize=(10, 8))
 
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=1000, font_size=8) # dibuja el grafo con los nodos y las etiquetas
 
+    labels = nx.get_edge_attributes(G, 'weight') # obtiene los pesos de las aristas
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels) # dibuja los pesos en las aristas
+    
+    edges_camino = [(camino[i], camino[i+1]) for i in range(len(camino)-1)]
+    nx.draw_networkx_edges(G, pos, edgelist=edges_camino, edge_color='red', width=2)
+    # muestra el origen en verde y el destino en morado
+    nx.draw_networkx_nodes(G, pos, nodelist=[camino[0]], node_color='green', node_size=1000) # nodo de origen en verde
+    nx.draw_networkx_nodes(G, pos, nodelist=[camino[-1]], node_color='purple', node_size=1000) # nodo de destino en morado
+    
+    # agrega una leyenda para el origen en verde, rutas, rutas tomadas en rojo y destino en morado
+    plt.legend(["Ciudad", "Rutas", "Ruta Optima", "Ciudad de Origen", "Ciudad de Destino"], loc="upper left", fontsize=12, markerscale=0.5) # markerscale es para reducir el tamaño de los marcadores en la leyenda
+    plt.axis('off') # oculta los ejes
+    plt.title("Grafo de Ciudades con Camino Resaltado")
+    plt.show()
+
+# muestra el grafo completo sin ningún camino en rojo
+def mostrar_grafo_completo():
+    plt.close("all")  # cierra cualquier pestaña de grafo abierta si es q se ejecuta
+    G = construir_grafo()
+    pos = nx.spring_layout(G, seed=42, k=0.5) # spring_layout es para mantener la posicion de los nodos
+    plt.figure(figsize=(10, 8))
+    
+    nx.draw(G, pos, with_labels=True, node_color='lightblue', node_size=1000, font_size=8) # dibuja el grafo con los nodos y las etiquetas
+    
+    labels = nx.get_edge_attributes(G, 'weight') # obtiene los pesos de las aristas
+    nx.draw_networkx_edge_labels(G, pos, edge_labels=labels) # dibuja los pesos en las aristas, "label" es para mostrar el peso de cada arista en el grafo
+    plt.title("Grafo Completo de Ciudades")
+    plt.show()
+
+# usamos el menu libreria tkinter para las opciones :V
+menu_bar = tk.Menu(ventana)
+menu_opciones = tk.Menu(menu_bar, tearoff=0) # tearoff=0 es para que no se pueda separar el submenu del menu principal
+menu_opciones.add_command(label="Mostrar Grafo Completo", command=mostrar_grafo_completo)
+menu_bar.add_cascade(label="Opciones", menu=menu_opciones) # add_cascade es para agregar un submenu al menu principal
+ventana.configure(menu=menu_bar)
 
 # elementos de la interfaz para ingresar las ciudades de origen y destino
 label_inicio = ctk.CTkLabel(ventana, text="Ciudad de Origen:")
@@ -168,11 +106,7 @@ entry_destino.pack(pady=5)
 boton_ejecutar = ctk.CTkButton(ventana, text="Ejecutar Dijkstra", command=ejecutar_dijkstra)
 boton_ejecutar.pack(pady=20)
 
-boton_limpiar = ctk.CTkButton(ventana, text="Limpiar", command=limpiar_campos)
-boton_limpiar.pack(pady=20)
-
 resultado_label = ctk.CTkLabel(ventana, text="")
 resultado_label.pack(pady=10)
 
-#para que no se cierre
 ventana.mainloop()
