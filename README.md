@@ -20,4 +20,4 @@ Matplotlib    ---> Para graficar el Grafo\
 NetworkX      ---> Para manejar la estructura del grafo y sus atrubutos\
 Tkinter       ---> Para la interfaz grafica\
 CustomTkinter ---> Para mejorar la apariencia visual
-## Como Iniciar La Interfaz Grafica
+## Como Usar La Interfaz Grafica
