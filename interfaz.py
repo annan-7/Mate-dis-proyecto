@@ -14,7 +14,9 @@ ctk.set_default_color_theme("blue")
 # creación de la ventana principal
 ventana = ctk.CTk()
 ventana.title("Algoritmo de Dijkstra - Ciudades")
-ventana.geometry("720x480")
+ancho_pantalla = ventana.winfo_screenwidth()
+alto_pantalla = ventana.winfo_screenheight()
+ventana.geometry(f"720x480+{ancho_pantalla-500}+{alto_pantalla/2}")
 
 # ejecuta el algoritmo de dijkstra al hacer click en el botón
 def ejecutar_dijkstra():
@@ -82,6 +84,7 @@ def mostrar_grafo_completo():
     
     labels = nx.get_edge_attributes(G, 'weight') # obtiene los pesos de las aristas
     nx.draw_networkx_edge_labels(G, pos, edge_labels=labels) # dibuja los pesos en las aristas, "label" es para mostrar el peso de cada arista en el grafo
+    plt.legend(["Ciudad", "Rutas"], loc="upper left", fontsize=12, markerscale=0.5)
     plt.title("Grafo Completo de Ciudades")
     plt.show()
 
@@ -105,8 +108,8 @@ entry_destino.pack(pady=5)
 
 boton_ejecutar = ctk.CTkButton(ventana, text="Ejecutar Dijkstra", command=ejecutar_dijkstra)
 boton_ejecutar.pack(pady=20)
-
 resultado_label = ctk.CTkLabel(ventana, text="")
 resultado_label.pack(pady=10)
 
+ventana.after(200, mostrar_grafo_completo)
 ventana.mainloop()
