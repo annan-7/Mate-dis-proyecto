@@ -1,10 +1,9 @@
 # Ciudades conectadas, peso de cada conexion, fuente de la informacion
 
-grafo_ciudades = {    #se ingresan todas las ciudades y su peso con el resto de ciudades
-                #solo hay de españa y portugal (diccionario con listas de tuplas como valores
+grafo_ciudades = {    #se ingresan todas las ciudades y su peso el cual representa los KM con el resto de ciudades
     "madrid": [
-        (210, "valladolid"), (320, "zaragoza"), (350, "valencia"), 
-        (350, "alicante"), (400, "murcia"), (400, "cordoba")
+        (162, "valladolid"), (315, "zaragoza"), (302, "valencia"), 
+        (360, "alicante"), (400, "murcia"), (400, "cordoba")
     ],
 
     "valladolid": [
