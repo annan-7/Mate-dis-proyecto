@@ -20,4 +20,9 @@ Matplotlib    ---> Para graficar el Grafo\
 NetworkX      ---> Para manejar la estructura del grafo y sus atrubutos\
 Tkinter       ---> Para la interfaz grafica\
 CustomTkinter ---> Para mejorar la apariencia visual
+
 ## Como Usar La Interfaz Grafica
+1. Ejecucion del archivo "interfaz.py"\
+2. Ingresar la ciudad de origen y la ciudad de destino en su cuadro correspondiente\
+3. Presionar el boton "Ejecutar dijkstra"\
+La ventana de grafo mostrara la ruta optima desde origen al destino
